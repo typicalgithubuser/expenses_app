@@ -61,12 +61,17 @@ function calculateCustomStats(expenses) {
 function renderExpenses() {
     const listElement = document.getElementById('expense-list');
     const filterCat = document.getElementById('filter-category').value;
+    const startDate = document.getElementById('stats-start').value;
+    const endDate = document.getElementById('stats-end').value;
     const expenses = JSON.parse(localStorage.getItem('expenses_db')) || [];
     
     let userExpenses = expenses.filter(e => e.user === currentUser);
     
-    // викликаємо нову функцію розрахунку
     calculateCustomStats(userExpenses);
+
+    if (startDate && endDate) {
+        userExpenses = userExpenses.filter(e => e.date >= startDate && e.date <= endDate);
+    }
 
     if (filterCat !== 'всі') {
         userExpenses = userExpenses.filter(e => e.category === filterCat);
