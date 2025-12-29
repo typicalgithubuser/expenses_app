@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Облік витрат - Вхід</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div id="login-form">
+            <h2>вхід у систему</h2>
+            <input type="text" id="login-username" placeholder="логін">
+            <input type="password" id="login-password" placeholder="пароль">
+            <button onclick="login()">увійти</button>
+            <p>немає акаунта? <a href="#" onclick="toggleForms()">зареєструватися</a></p>
+        </div>
+
+        <div id="register-form" style="display: none;">
+            <h2>реєстрація</h2>
+            <input type="text" id="reg-username" placeholder="новий логін">
+            <input type="password" id="reg-password" placeholder="новий пароль">
+            <button onclick="register()">створити акаунт</button>
+            <p>вже є акаунт? <a href="#" onclick="toggleForms()">увійти</a></p>
+        </div>
+    </div>
+    <script src="auth.js"></script>
+</body>
+</html>

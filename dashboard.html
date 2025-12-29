@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель керування - Мої витрати</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <button onclick="logout()">вихід</button>
+    </nav>
+    <div class="dashboard-container">
+        <h2 id="welcome-message">вітаємо, користувачу!</h2>
+        
+        <div class="expense-form">
+            <h3>додати нову витрату</h3>
+            <input type="number" id="exp-amount" placeholder="сума">
+            <select id="exp-category">
+                <option value="їжа">їжа</option>
+                <option value="одяг">одяг</option>
+                <option value="транспорт">транспорт</option>
+                <option value="відпочинок">відпочинок</option>
+                <option value="лікування">лікування</option>
+                <option value="спорт">спорт</option>
+                <option value="інше">інше</option>
+            </select>
+            <input type="date" id="exp-date">
+            <input type="text" id="exp-comment" placeholder="коментар (необов'язково)">
+            <button onclick="addExpense()">зберегти витрату</button>
+        </div>
+
+        <div class="stats-container">
+            <h3>статистика за період</h3>
+            <div class="date-range">
+                <div>з: <input type="date" id="stats-start" onchange="renderExpenses()"></div>
+                <div>по: <input type="date" id="stats-end" onchange="renderExpenses()"></div>
+            </div>
+            <div id="stats-output-custom" class="stat-box" style="margin-top: 15px;">
+                сума за період: <span>0 грн</span>
+            </div>
+        </div>
+
+        <div class="filter-container">
+            <h3>фільтрація</h3>
+            <select id="filter-category" onchange="renderExpenses()">
+                <option value="всі">всі категорії</option>
+                <option value="їжа">їжа</option>
+                <option value="одяг">одяг</option>
+                <option value="транспорт">транспорт</option>
+                <option value="відпочинок">відпочинок</option>
+                <option value="лікування">лікування</option>
+                <option value="спорт">спорт</option>
+                <option value="інше">інше</option>
+            </select>
+        </div>
+
+        <div class="list-container">
+            <h3>мої записи</h3>
+            <div id="expense-list"></div>
+        </div>
+    </div>  
+    <script src="dashboard.js"></script>
+</body>
+</html>
