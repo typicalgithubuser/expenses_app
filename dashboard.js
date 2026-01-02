@@ -6,32 +6,33 @@ if (!currentUser) {
     document.getElementById('welcome-message').innerText = `вітаємо, ${currentUser}!`;
 }
 
-function addExpense() {
+async function addExpense() {
     const amount = document.getElementById('exp-amount').value;
     const category = document.getElementById('exp-category').value;
     const date = document.getElementById('exp-date').value;
     const comment = document.getElementById('exp-comment').value;
 
-    if (!amount || !date) return alert('будь ласка, заповніть суму та дату');
+    if (!amount || !date) return alert('заповніть дані');
 
     const newExpense = {
         id: Date.now(),
         user: currentUser,
         amount: parseFloat(amount),
-        category: category,
-        date: date,
-        comment: comment
+        category,
+        date,
+        comment
     };
 
-    let expenses = JSON.parse(localStorage.getItem('expenses_db')) || [];
-    expenses.push(newExpense);
-    localStorage.setItem('expenses_db', JSON.stringify(expenses));
+    const response = await fetch('http://localhost:3000/api/expenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newExpense)
+    });
 
-    alert('витрату додано успішно');
-    
-    document.getElementById('exp-amount').value = '';
-    document.getElementById('exp-comment').value = '';
-    document.getElementById('exp-date').value = '';
+    if (response.ok) {
+        alert('додано');
+        renderExpenses();
+    }
 }
 
 function logout() {
@@ -58,17 +59,24 @@ function calculateCustomStats(expenses) {
     output.innerHTML = `сума за період: <span>${total.toFixed(2)} грн</span>`;
 }
 
-function renderExpenses() {
+async function renderExpenses() {
     const listElement = document.getElementById('expense-list');
     const filterCat = document.getElementById('filter-category').value;
     const startDate = document.getElementById('stats-start').value;
     const endDate = document.getElementById('stats-end').value;
-    const expenses = JSON.parse(localStorage.getItem('expenses_db')) || [];
-    
-    let userExpenses = expenses.filter(e => e.user === currentUser);
+
+    // завантаження даних із сервера замість локального сховища
+    const response = await fetch(`http://localhost:3000/api/expenses/${currentUser}`);
+    let userExpenses = await response.json();
     
     calculateCustomStats(userExpenses);
+    
+    // оновлення графіка, якщо функція присутня в коді
+    if (typeof renderManualSvgChart === 'function') {
+        renderManualSvgChart(userExpenses);
+    }
 
+    // фільтрація для відображення списку під статистикою
     if (startDate && endDate) {
         userExpenses = userExpenses.filter(e => e.date >= startDate && e.date <= endDate);
     }
