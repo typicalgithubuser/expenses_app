@@ -15,34 +15,39 @@ function getUsers() {
     return users ? JSON.parse(users) : [];
 }
 
-function register() {
-    const user = document.getElementById('reg-username').value;
-    const pass = document.getElementById('reg-password').value;
-    
-    if (!user || !pass) return alert('заповніть усі поля');
-    
-    let users = getUsers();
-    if (users.find(u => u.username === user)) {
-        return alert('користувач вже існує');
+async function register() {
+    const username = document.getElementById('reg-username').value;
+    const password = document.getElementById('reg-password').value;
+    if (!username || !password) return alert('заповніть поля');
+
+    const response = await fetch('http://localhost:3000/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+    });
+
+    if (response.ok) {
+        alert('успішно');
+        toggleForms();
+    } else {
+        alert('користувач вже є або помилка');
     }
-    
-    users.push({ username: user, password: pass });
-    localStorage.setItem('users_db', JSON.stringify(users));
-    alert('реєстрація успішна');
-    toggleForms();
 }
 
-function login() {
-    const user = document.getElementById('login-username').value;
-    const pass = document.getElementById('login-password').value;
-    
-    let users = getUsers();
-    const foundUser = users.find(u => u.username === user && u.password === pass);
-    
-    if (foundUser) {
-        sessionStorage.setItem('currentUser', user);
+async function login() {
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+
+    const response = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+    });
+
+    if (response.ok) {
+        sessionStorage.setItem('currentUser', username);
         window.location.href = 'dashboard.html';
     } else {
-        alert('невірний логін або пароль');
+        alert('невірні дані');
     }
 }
